@@ -1,4 +1,3 @@
-
 import { IsEmail, IsEnum, IsString, MaxLength, MinLength } from "class-validator";
 import { UserRole } from "../enum/user-role.enum.js";
 
