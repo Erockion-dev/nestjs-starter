@@ -20,4 +20,7 @@ export class User {
         enum: UserRole,
     })
     role: UserRole;
+
+    @Column({ default: true })
+    active: boolean;
 }

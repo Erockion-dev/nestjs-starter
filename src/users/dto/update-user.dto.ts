@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsBoolean, IsEmail, IsEnum, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { UserRole } from "../enum/user-role.enum.js";
 
 export class UpdateUserDto {
@@ -15,4 +15,8 @@ export class UpdateUserDto {
     @IsOptional()
     @IsEnum(UserRole)
     role: UserRole;
+
+    @IsOptional()
+    @IsBoolean()
+    active: boolean;
 }
