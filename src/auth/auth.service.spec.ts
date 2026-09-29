@@ -50,6 +50,7 @@ describe('AuthService', () => {
     email: 'user@example.com',
     password: '123_user',
     role: UserRole.USER,
+    active: true,
   }
   const token = '1234567890'
 
@@ -112,6 +113,26 @@ describe('AuthService', () => {
     const promise = service.login({
       email: user.email,
       password: '123_wrong'
+    })
+
+    await expect(promise).rejects.toThrow(UnauthorizedException)
+    await expect(promise).rejects.toThrow('Incorrect email or password.')
+  })
+
+  it('should reject an inactive user.', async () => {
+    findByEmailAuthMock.mockResolvedValue({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      role: user.role,
+      active: false,
+    })
+    vi.mocked(bcrypt.compare).mockImplementation(async () => true);
+
+    const promise = service.login({
+      email: user.email,
+      password: '123_user'
     })
 
     await expect(promise).rejects.toThrow(UnauthorizedException)
