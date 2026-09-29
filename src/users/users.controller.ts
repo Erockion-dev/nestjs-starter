@@ -10,7 +10,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   @HttpCode(200)
-  profile(@CurrentUser('sub') userId: number) {
+  profile(@CurrentUser('id') userId: number) {
     return this.usersService.findOne(userId);
   }
 }
