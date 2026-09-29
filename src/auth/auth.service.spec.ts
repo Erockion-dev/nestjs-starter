@@ -16,12 +16,12 @@ vi.mock('bcrypt', () => ({
 describe('AuthService', () => {
   let service: AuthService;
 
-  let findByEmailMock: ReturnType<typeof vi.fn>
+  let findByEmailAuthMock: ReturnType<typeof vi.fn>
   let signMock: ReturnType<typeof vi.fn>
 
   beforeEach(async () => {
 
-    findByEmailMock = vi.fn();
+    findByEmailAuthMock = vi.fn();
     signMock = vi.fn();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -29,7 +29,7 @@ describe('AuthService', () => {
         {
           provide: UsersService,
           useValue: {
-            findByEmail: findByEmailMock,
+            findByEmailAuth: findByEmailAuthMock,
           }
         },
         {
@@ -50,6 +50,7 @@ describe('AuthService', () => {
     email: 'user@example.com',
     password: '123_user',
     role: UserRole.USER,
+    active: true,
   }
   const token = '1234567890'
 
@@ -59,7 +60,7 @@ describe('AuthService', () => {
 
   it('should call userService.findByEmail, jwtService.sign and bcrypt.compare', async () => {
     
-    findByEmailMock.mockResolvedValue(user)
+    findByEmailAuthMock.mockResolvedValue(user)
     vi.mocked(bcrypt.compare).mockImplementation(async () => true)
     signMock.mockReturnValue(token)
 
@@ -68,7 +69,7 @@ describe('AuthService', () => {
       password: user.password,
     })
 
-    expect(findByEmailMock).toHaveBeenCalledWith(user.email)
+    expect(findByEmailAuthMock).toHaveBeenCalledWith(user.email)
     expect(vi.mocked(bcrypt.compare)).toHaveBeenCalledWith(
       user.password,
       user.password
@@ -81,7 +82,7 @@ describe('AuthService', () => {
   })
 
   it('should return the access token', async () => {
-    findByEmailMock.mockResolvedValue(user)
+    findByEmailAuthMock.mockResolvedValue(user)
     signMock.mockReturnValue(token)
 
     const result = await service.login({
@@ -94,7 +95,7 @@ describe('AuthService', () => {
   })
 
   it('should throw UnauthorizedException if email is not exist.', async () => {
-    findByEmailMock.mockResolvedValue(null)
+    findByEmailAuthMock.mockResolvedValue(null)
 
     const promise = service.login({
       email: 'not_exist_email@example.com',
@@ -106,12 +107,32 @@ describe('AuthService', () => {
   })
 
   it('should throw UnauthorizedException if password is not valid.', async () => {
-    findByEmailMock.mockResolvedValue(user)
+    findByEmailAuthMock.mockResolvedValue(user)
     vi.mocked(bcrypt.compare).mockImplementation(async () => false)
 
     const promise = service.login({
       email: user.email,
       password: '123_wrong'
+    })
+
+    await expect(promise).rejects.toThrow(UnauthorizedException)
+    await expect(promise).rejects.toThrow('Incorrect email or password.')
+  })
+
+  it('should reject an inactive user.', async () => {
+    findByEmailAuthMock.mockResolvedValue({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      role: user.role,
+      active: false,
+    })
+    vi.mocked(bcrypt.compare).mockImplementation(async () => true);
+
+    const promise = service.login({
+      email: user.email,
+      password: '123_user'
     })
 
     await expect(promise).rejects.toThrow(UnauthorizedException)

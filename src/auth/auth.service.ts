@@ -12,7 +12,7 @@ export class AuthService {
     ){}
 
     async login(loginDto: LoginDto) {
-        const user = await this.userService.findByEmail(loginDto.email)
+        const user = await this.userService.findByEmailAuth(loginDto.email)
 
         if (!user) {
             throw new UnauthorizedException('Incorrect email or password.')
@@ -23,12 +23,12 @@ export class AuthService {
             user.password,
         );
 
-        if (!isPasswordValid) {
+        if (!isPasswordValid || !user.active) {
             throw new UnauthorizedException('Incorrect email or password.')
         }
 
         const token = this.jwtService.sign({
-            sub: user.id, // identifiant de l'utilisateur. C'est la convention JWT pour le sujet du token.
+            sub: user.id,
             email: user.email,
             role: user.role,
         });
