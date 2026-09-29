@@ -33,6 +33,7 @@ export class UsersService {
         name: savedUser.name,
         email: savedUser.email,
         role: savedUser.role,
+        active: savedUser.active,
       }
     } catch (error) {
       throw new BadRequestException('Erreur lors de la création.');
@@ -49,7 +50,8 @@ export class UsersService {
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      active: user.active,
     }))
 
     return {
@@ -75,6 +77,7 @@ export class UsersService {
       name: user.name,
       email: user.email,
       role: user.role,
+      active: user.active,
     };
   }
 
@@ -94,6 +97,7 @@ export class UsersService {
         name: userSaved.name,
         email: userSaved.email,
         role: userSaved.role,
+        active: userSaved.active,
       };
     } catch (error) {
       throw new BadRequestException('Erreur lors de la modification.');
@@ -114,7 +118,7 @@ export class UsersService {
     }
   }
 
-  async findByEmail(email: string): Promise<UserAuthDto | null> {
+  async findByEmailAuth(email: string): Promise<UserAuthDto | null> {
 
     const user =  await this.userRepository.findOneBy({ email });
 
@@ -128,6 +132,7 @@ export class UsersService {
       email: user.email,
       password: user.password,
       role: user.role,
+      active: user.active,
     }
   }
 }

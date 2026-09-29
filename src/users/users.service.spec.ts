@@ -52,19 +52,20 @@ describe('UsersService', () => {
     service = module.get<UsersService>(UsersService);
   });
 
-  // Var for test
   const user: User = {
     id: 1,
     name: 'user',
     email: 'user@email.com',
     password: '123_user',
     role: UserRole.USER,
+    active: true,
   }
   const userResponseDto: UserResponseDto = {
     id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,
+    active: true,
   }
   const createUserDto: CreateUserDto = {
     name: 'user',
@@ -77,6 +78,7 @@ describe('UsersService', () => {
     email: 'user@email.com',
     password: '123_user',
     role: UserRole.USER,
+    active: true,
   };
   const savedUser: User = {
     id: 1,
@@ -84,12 +86,14 @@ describe('UsersService', () => {
     email: 'user@email.com',
     password: '123_user',
     role: UserRole.USER,
+    active: true,
   };
   const hashedPassword = 'hashed-password';
   const updateUserDto: UpdateUserDto = {
     name: 'update_user',
     email: 'update_user@email.com',
     role: UserRole.USER,
+    active: true,
   }
   const modifiedUser: User = {
     id: 1,
@@ -97,6 +101,7 @@ describe('UsersService', () => {
     email: 'update_user@email.com',
     password: '123_user',
     role: UserRole.USER,
+    active: true,
   }
   const updatedUser: User = {
     id: 1,
@@ -104,6 +109,7 @@ describe('UsersService', () => {
     email: 'update_user@email.com',
     password: '123_user',
     role: UserRole.USER,
+    active: true,
   }
 
   it('should be defined', () => {
@@ -161,7 +167,8 @@ describe('UsersService', () => {
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      active: user.active,
     })
   })
 
@@ -222,7 +229,8 @@ describe('UsersService', () => {
       id: modifiedUser.id,
       name: modifiedUser.name,
       email: modifiedUser.email,
-      role: modifiedUser.role
+      role: modifiedUser.role,
+      active: modifiedUser.active,
     })
   })
 
