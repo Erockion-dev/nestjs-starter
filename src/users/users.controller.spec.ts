@@ -47,6 +47,7 @@ describe('UsersController', () => {
       name: "user",
       email: "user@email.com",
       role: UserRole.USER,
+      active: true,
     };
     findOneMock.mockResolvedValue(response);
 
