@@ -25,12 +25,12 @@ describe('Users profile (e2e)', () => {
   });
 
   it('GET /users/profile without token should return 401', async () => {
-    await request(app.getHttpServer()).get('/users/profile').expect(401);
+    await request(app.getHttpServer()).get('/api/users/profile').expect(401);
   });
 
   it('GET /users/profile with invalid token should return 401', async () => {
     await request(app.getHttpServer())
-      .get('/users/profile')
+      .get('/api/users/profile')
       .set('Authorization', 'Bearer invalid-token')
       .expect(401);
   });
