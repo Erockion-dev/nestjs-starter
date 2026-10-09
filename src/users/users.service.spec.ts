@@ -35,7 +35,8 @@ describe('UsersService', () => {
     removeMock = vi.fn();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService,
+      providers: [
+        UsersService,
         {
           provide: getRepositoryToken(User),
           useValue: {
@@ -59,20 +60,20 @@ describe('UsersService', () => {
     password: '123_user',
     role: UserRole.USER,
     active: true,
-  }
+  };
   const userResponseDto: UserResponseDto = {
     id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,
     active: true,
-  }
+  };
   const createUserDto: CreateUserDto = {
     name: 'user',
     email: 'user@email.com',
     password: '123_user',
     role: UserRole.USER,
-  }
+  };
   const newUser = {
     name: 'user',
     email: 'user@email.com',
@@ -94,7 +95,7 @@ describe('UsersService', () => {
     email: 'update_user@email.com',
     role: UserRole.USER,
     active: true,
-  }
+  };
   const modifiedUser: User = {
     id: 1,
     name: 'update_user',
@@ -102,7 +103,7 @@ describe('UsersService', () => {
     password: '123_user',
     role: UserRole.USER,
     active: true,
-  }
+  };
   const updatedUser: User = {
     id: 1,
     name: 'update_user',
@@ -110,7 +111,7 @@ describe('UsersService', () => {
     password: '123_user',
     role: UserRole.USER,
     active: true,
-  }
+  };
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -126,58 +127,57 @@ describe('UsersService', () => {
       skip: (2 - 1) * 10,
       take: 10,
     });
-  })
+  });
 
   it('should return users with pagination metadata', async () => {
     const paginationMetaDto: PaginationMetaDto = {
       page: 2,
       limit: 10,
       total: 11,
-      totalPages: 2
-    }
+      totalPages: 2,
+    };
 
     const response: UsersResponseDto = {
       data: [userResponseDto],
       meta: paginationMetaDto,
-    }
+    };
 
-    findAndCountMock.mockResolvedValue([[user], 11])
+    findAndCountMock.mockResolvedValue([[user], 11]);
 
     const result = await service.findAll(2, 10);
 
-    expect(result).toEqual(response)
-  })
+    expect(result).toEqual(response);
+  });
 
   // ********************
   // findOne
   // ********************
   it('should call userRepository.findOne', async () => {
-
-    findOneByMock.mockResolvedValue(user)
+    findOneByMock.mockResolvedValue(user);
 
     await service.findOne(1);
 
-    expect(findOneByMock).toHaveBeenCalledWith({id: 1})
-  })
+    expect(findOneByMock).toHaveBeenCalledWith({ id: 1 });
+  });
 
   it('should return the user', async () => {
-    findOneByMock.mockResolvedValue(user)
-    const result = await service.findOne(1)
+    findOneByMock.mockResolvedValue(user);
+    const result = await service.findOne(1);
     expect(result).toEqual({
       id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,
       active: user.active,
-    })
-  })
+    });
+  });
 
   it('should throw NotFoundExeption if user does not exist.', async () => {
     findOneByMock.mockResolvedValue(null);
-    const promise = service.findOne(999)
-    await expect(promise).rejects.toThrow(NotFoundException)
-    await expect(promise).rejects.toThrow(`User with id 999 is not found.`)
-  })
+    const promise = service.findOne(999);
+    await expect(promise).rejects.toThrow(NotFoundException);
+    await expect(promise).rejects.toThrow(`User with id 999 is not found.`);
+  });
 
   // ********************
   // create
@@ -187,43 +187,43 @@ describe('UsersService', () => {
     createMock.mockReturnValue(newUser);
     saveMock.mockResolvedValue(savedUser);
 
-    await service.create(createUserDto)
+    await service.create(createUserDto);
 
-    expect(bcrypt.hash).toHaveBeenCalledWith(createUserDto.password, 10)
+    expect(bcrypt.hash).toHaveBeenCalledWith(createUserDto.password, 10);
     expect(createMock).toHaveBeenCalledWith({
       ...createUserDto,
-      password: hashedPassword
-    })
-    expect(saveMock).toHaveBeenCalledWith(newUser)
-  })
+      password: hashedPassword,
+    });
+    expect(saveMock).toHaveBeenCalledWith(newUser);
+  });
 
   it('should return the result from userService.create', async () => {
     createMock.mockReturnValue(newUser);
     saveMock.mockResolvedValue(savedUser);
 
-    const result = await service.create(createUserDto)
+    const result = await service.create(createUserDto);
 
-    expect(result).toEqual(userResponseDto)
-  })
+    expect(result).toEqual(userResponseDto);
+  });
 
   // ********************
   // update
   // ********************
   it('should call userRepository.findOneBy and save', async () => {
-    findOneByMock.mockResolvedValue(user)
-    saveMock.mockResolvedValue(modifiedUser)
+    findOneByMock.mockResolvedValue(user);
+    saveMock.mockResolvedValue(modifiedUser);
 
-    await service.update(1, updateUserDto)
+    await service.update(1, updateUserDto);
 
-    expect(findOneByMock).toHaveBeenCalledWith({id: 1})
-    expect(saveMock).toHaveBeenCalledWith(modifiedUser)
-  })
+    expect(findOneByMock).toHaveBeenCalledWith({ id: 1 });
+    expect(saveMock).toHaveBeenCalledWith(modifiedUser);
+  });
 
   it('should return the result from repository.save', async () => {
-    findOneByMock.mockResolvedValue(user)
-    saveMock.mockResolvedValue(updatedUser)
+    findOneByMock.mockResolvedValue(user);
+    saveMock.mockResolvedValue(updatedUser);
 
-    const result = await service.update(1, updateUserDto)
+    const result = await service.update(1, updateUserDto);
 
     expect(result).toEqual({
       id: modifiedUser.id,
@@ -231,56 +231,56 @@ describe('UsersService', () => {
       email: modifiedUser.email,
       role: modifiedUser.role,
       active: modifiedUser.active,
-    })
-  })
+    });
+  });
 
   it('should throw NotFoundException if user does not found.', async () => {
-    findOneByMock.mockResolvedValue(null)
-    const promise = service.update(999, updateUserDto)
-    await expect(promise).rejects.toThrow(NotFoundException)
-    await expect(promise).rejects.toThrow('User id 999 not found.')
-  })
+    findOneByMock.mockResolvedValue(null);
+    const promise = service.update(999, updateUserDto);
+    await expect(promise).rejects.toThrow(NotFoundException);
+    await expect(promise).rejects.toThrow('User id 999 not found.');
+  });
 
   it('should throw BadRequestException if user the save fails.', async () => {
-    findOneByMock.mockResolvedValue(user)
-    saveMock.mockRejectedValue(new Error('Error DB'))
+    findOneByMock.mockResolvedValue(user);
+    saveMock.mockRejectedValue(new Error('Error DB'));
 
-    const promise = service.update(1, updateUserDto)
-    await expect(promise).rejects.toThrow(BadRequestException)
-    await expect(promise).rejects.toThrow('Erreur lors de la modification.')
-  })
+    const promise = service.update(1, updateUserDto);
+    await expect(promise).rejects.toThrow(BadRequestException);
+    await expect(promise).rejects.toThrow('Erreur lors de la modification.');
+  });
 
   // ********************
   // remove
   // ********************
   it('should call userRepository.findOneBy and remove', async () => {
-    findOneByMock.mockResolvedValue(user)
-    await service.remove(1)
-    expect(findOneByMock).toHaveBeenCalledWith({id: 1})
-    expect(removeMock).toHaveBeenCalledWith(user)
-  })
+    findOneByMock.mockResolvedValue(user);
+    await service.remove(1);
+    expect(findOneByMock).toHaveBeenCalledWith({ id: 1 });
+    expect(removeMock).toHaveBeenCalledWith(user);
+  });
 
   it('should return undefined.', async () => {
-    findOneByMock.mockResolvedValue(user)
-    removeMock.mockResolvedValue(user)
-    const result = await service.remove(1)
-    expect(result).toBeUndefined()
-  })
+    findOneByMock.mockResolvedValue(user);
+    removeMock.mockResolvedValue(user);
+    const result = await service.remove(1);
+    expect(result).toBeUndefined();
+  });
 
   it('should throw NotFoundException if user does not found.', async () => {
-    findOneByMock.mockResolvedValue(null)
-    const promise = service.remove(999)
-    await expect(promise).rejects.toThrow(NotFoundException)
-    await expect(promise).rejects.toThrow('User with id 999 not found.')
-  })
+    findOneByMock.mockResolvedValue(null);
+    const promise = service.remove(999);
+    await expect(promise).rejects.toThrow(NotFoundException);
+    await expect(promise).rejects.toThrow('User with id 999 not found.');
+  });
 
   it('should throw BadRequestException if user remove fails.', async () => {
-    findOneByMock.mockResolvedValue(user)
-    removeMock.mockRejectedValue(new Error('Error BDD'))
+    findOneByMock.mockResolvedValue(user);
+    removeMock.mockRejectedValue(new Error('Error BDD'));
 
-    const promise = service.remove(1)
+    const promise = service.remove(1);
 
-    await expect(promise).rejects.toThrow(BadRequestException)
-    await expect(promise).rejects.toThrow('Erreur lors de la suppression.')
-  })
+    await expect(promise).rejects.toThrow(BadRequestException);
+    await expect(promise).rejects.toThrow('Erreur lors de la suppression.');
+  });
 });

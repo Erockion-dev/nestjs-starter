@@ -24,7 +24,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    AuthModule
+    AuthModule,
   ],
   providers: [AppService],
 })

@@ -3,24 +3,24 @@ import { UserRole } from '../enum/user-role.enum.js';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column({ unique: true })
-    email: string;
+  @Column({ unique: true })
+  email: string;
 
-    @Column({ length: 255 })
-    password: string;
+  @Column({ length: 255 })
+  password: string;
 
-    @Column({
-        type: 'enum',
-        enum: UserRole,
-    })
-    role: UserRole;
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+  })
+  role: UserRole;
 
-    @Column({ default: true })
-    active: boolean;
+  @Column({ default: true })
+  active: boolean;
 }
