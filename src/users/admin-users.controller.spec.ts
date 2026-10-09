@@ -11,11 +11,11 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 describe('AdminUsersController', () => {
   let controller: AdminUsersController;
-  let findAllMock: ReturnType<typeof vi.fn>
-  let findOneMock: ReturnType<typeof vi.fn>
-  let createMock: ReturnType<typeof vi.fn>
-  let updateMock: ReturnType<typeof vi.fn>
-  let removeMock: ReturnType<typeof vi.fn>
+  let findAllMock: ReturnType<typeof vi.fn>;
+  let findOneMock: ReturnType<typeof vi.fn>;
+  let createMock: ReturnType<typeof vi.fn>;
+  let updateMock: ReturnType<typeof vi.fn>;
+  let removeMock: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
     findAllMock = vi.fn();
@@ -35,13 +35,13 @@ describe('AdminUsersController', () => {
             create: createMock,
             update: updateMock,
             remove: removeMock,
-          }
-        }
+          },
+        },
       ],
     })
-    .overrideGuard(JwtAuthGuard)
-    .useValue({ canActivate: () => true })
-    .compile();
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<AdminUsersController>(AdminUsersController);
   });
@@ -69,17 +69,17 @@ describe('AdminUsersController', () => {
         limit: 1,
         total: 0,
         totalPages: 0,
-      }
-    }
+      },
+    };
     findAllMock.mockResolvedValue(response);
 
     const restsult = await controller.findAll({
       page: 1,
       limit: 10,
-    })
+    });
 
     expect(restsult).toEqual(response);
-  })
+  });
 
   // ********************
   // FindOne
@@ -87,21 +87,22 @@ describe('AdminUsersController', () => {
   it('should call userService.findOne', () => {
     controller.findOne(1);
     expect(findOneMock).toHaveBeenLastCalledWith(1);
-  })
+  });
 
   it('should return the result from userService.findOne', async () => {
     const response: UserResponseDto = {
       id: 1,
-      name: "user",
-      email: "user@email.com",
+      name: 'user',
+      email: 'user@email.com',
       role: UserRole.USER,
+      active: true,
     };
     findOneMock.mockResolvedValue(response);
 
     const result = await controller.findOne(1);
 
     expect(result).toEqual(response);
-  })
+  });
 
   // ********************
   // Create
@@ -112,7 +113,7 @@ describe('AdminUsersController', () => {
       email: 'user@email.com',
       password: '123_user',
       role: UserRole.USER,
-    }
+    };
     controller.create(createUserDto);
     expect(createMock).toHaveBeenCalledWith(createUserDto);
   });
@@ -123,19 +124,20 @@ describe('AdminUsersController', () => {
       email: 'user@email.com',
       password: '123_user',
       role: UserRole.USER,
-    }
+    };
     const userResponseDto: UserResponseDto = {
       id: 1,
       name: 'user',
       email: 'user@email.com',
       role: UserRole.USER,
+      active: true,
     };
-    createMock.mockResolvedValue(userResponseDto)
+    createMock.mockResolvedValue(userResponseDto);
 
-    const result = await controller.create(createUserDto)
+    const result = await controller.create(createUserDto);
 
-    expect(result).toEqual(userResponseDto)
-  })
+    expect(result).toEqual(userResponseDto);
+  });
 
   // ********************
   // Update
@@ -145,24 +147,27 @@ describe('AdminUsersController', () => {
       name: 'newName',
       email: 'new@email.com',
       role: UserRole.USER,
-    }
+      active: true,
+    };
 
     controller.update(1, updateUserDto);
 
     expect(updateMock).toHaveBeenCalledWith(1, updateUserDto);
-  })
+  });
 
   it('should return the result from serviceUser.update', async () => {
     const updateUserDto: UpdateUserDto = {
       name: 'newName',
       email: 'new@email.com',
       role: UserRole.USER,
-    }
+      active: true,
+    };
     const userResponseDto: UserResponseDto = {
       id: 1,
       name: 'newName',
       email: 'new@email.com',
       role: UserRole.USER,
+      active: true,
     };
 
     updateMock.mockResolvedValue(userResponseDto);
@@ -170,7 +175,7 @@ describe('AdminUsersController', () => {
     const result = await controller.update(1, updateUserDto);
 
     expect(result).toEqual(userResponseDto);
-  })
+  });
 
   // ********************
   // remove
@@ -178,12 +183,12 @@ describe('AdminUsersController', () => {
   it('should call userService.remove', () => {
     controller.remove(1);
     expect(removeMock).toHaveBeenCalledWith(1);
-  })
+  });
 
   it('should return the result from userService.remove', async () => {
     // for void
     removeMock.mockResolvedValue(undefined);
     const result = await controller.remove(1);
     expect(result).toBeUndefined();
-  })
+  });
 });

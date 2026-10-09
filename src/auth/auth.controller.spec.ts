@@ -5,7 +5,7 @@ import { LoginDto } from './dto/login.dto.js';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let loginMock: ReturnType<typeof vi.fn>
+  let loginMock: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
     loginMock = vi.fn();
@@ -17,8 +17,8 @@ describe('AuthController', () => {
           provide: AuthService,
           useValue: {
             login: loginMock,
-          }
-        }
+          },
+        },
       ],
     }).compile();
 
@@ -29,29 +29,29 @@ describe('AuthController', () => {
     expect(controller).toBeDefined();
   });
 
-  it ('should call authService.login', () => {
+  it('should call authService.login', () => {
     const loginDto: LoginDto = {
       email: 'admin@test.com',
-      password: '123admin'
-    }
+      password: '123admin',
+    };
 
-    controller.login(loginDto)
+    controller.login(loginDto);
 
-    expect(loginMock).toHaveBeenCalledWith(loginDto)
-  })
+    expect(loginMock).toHaveBeenCalledWith(loginDto);
+  });
 
-  it ('should return the result from authService.login.', async () => {
+  it('should return the result from authService.login.', async () => {
     const loginDto: LoginDto = {
       email: 'test@test.com',
-      password: '123test'
-    }
+      password: '123test',
+    };
 
-    const loginResponse = {access_token: '1234567890'}
-    
-    loginMock.mockResolvedValue(loginResponse)
+    const loginResponse = { access_token: '1234567890' };
 
-    const response = await controller.login(loginDto)
+    loginMock.mockResolvedValue(loginResponse);
 
-    expect(response).toEqual(loginResponse)
-  })
+    const response = await controller.login(loginDto);
+
+    expect(response).toEqual(loginResponse);
+  });
 });

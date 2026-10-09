@@ -8,7 +8,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 describe('UsersController', () => {
   let controller: UsersController;
-  let findOneMock: ReturnType<typeof vi.fn>
+  let findOneMock: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
     findOneMock = vi.fn();
@@ -20,13 +20,13 @@ describe('UsersController', () => {
           provide: UsersService,
           useValue: {
             findOne: findOneMock,
-          }
-        }
+          },
+        },
       ],
     })
-    .overrideGuard(JwtAuthGuard)
-    .useValue({ canActivate: () => true })
-    .compile();
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<UsersController>(UsersController);
   });
@@ -38,8 +38,8 @@ describe('UsersController', () => {
   it('should return the result from userService.findOne', async () => {
     const profile: UserResponseDto = {
       id: 1,
-      name: "user",
-      email: "user@email.com",
+      name: 'user',
+      email: 'user@email.com',
       role: UserRole.USER,
       active: true,
     };
@@ -47,5 +47,5 @@ describe('UsersController', () => {
     const result = controller.profile(profile);
 
     expect(result).toEqual(profile);
-  })
+  });
 });

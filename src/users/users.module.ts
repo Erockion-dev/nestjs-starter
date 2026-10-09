@@ -7,15 +7,9 @@ import { PassportModule } from '@nestjs/passport';
 import { AdminUsersController } from './admin-users.controller.js';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    PassportModule.register({}),
-  ],
+  imports: [TypeOrmModule.forFeature([User]), PassportModule.register({})],
   exports: [UsersService],
-  controllers: [
-    UsersController,
-    AdminUsersController,
-  ],
+  controllers: [UsersController, AdminUsersController],
   providers: [UsersService],
 })
 export class UsersModule {}

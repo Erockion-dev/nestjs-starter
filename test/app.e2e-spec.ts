@@ -1,29 +1,55 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
 import request from 'supertest';
-import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module.js';
+import { JwtService } from '@nestjs/jwt';
+import { AppModule } from '../src/app.module.js';
+import { UserRole } from '../src/users/enum/user-role.enum.js';
 
-describe('AppController (e2e)', () => {
-  let app: INestApplication<App>;
+describe('Users profile (e2e)', () => {
+  let app: INestApplication;
+  let jwtService: JwtService;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    jwtService = moduleFixture.get(JwtService);
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
-
-  afterEach(async () => {
+  afterAll(async () => {
     await app.close();
   });
+
+  it('GET /users/profile without token should return 401', async () => {
+    await request(app.getHttpServer()).get('/users/profile').expect(401);
+  });
+
+  it('GET /users/profile with invalid token should return 401', async () => {
+    await request(app.getHttpServer())
+      .get('/users/profile')
+      .set('Authorization', 'Bearer invalid-token')
+      .expect(401);
+  });
+
+  // it('GET /users/profile with valid token should return 200', async () => {
+  //   const token = jwtService.sign({
+  //     sub: 1,
+  //     email: 'test@example.com',
+  //     role: UserRole.USER,
+  //   });
+
+  //   await request(app.getHttpServer())
+  //     .get('/users/profile')
+  //     .set('Authorization', `Bearer ${token}`)
+  //     .expect(200)
+  //     .expect(({ body }) => {
+  //       expect(body).toHaveProperty('id');
+  //       expect(body).toHaveProperty('email');
+  //       expect(body).not.toHaveProperty('password');
+  //     });
+  // });
 });

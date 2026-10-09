@@ -56,6 +56,22 @@ Run e2e tests:
 pnpm test:e2e
 ```
 
+### Code Quality
+
+Run all code quality checks and tests:
+
+```bash
+pnpm quality
+```
+
+This command runs the following steps in order:
+- **TypeScript type checking** (`typecheck`)
+- **Prettier formatting check** (`format:check`)
+- **Automatic code formatting** (`format`)
+- **Unit tests** (`test`)
+
+The process stops if any command fails.
+
 ## Stack
 
 * NestJS

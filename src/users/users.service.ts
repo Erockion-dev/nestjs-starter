@@ -11,11 +11,10 @@ import bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
-  ){}
+    private readonly userRepository: Repository<User>,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     try {
@@ -34,7 +33,7 @@ export class UsersService {
         email: savedUser.email,
         role: savedUser.role,
         active: savedUser.active,
-      }
+      };
     } catch (error) {
       throw new BadRequestException('Erreur lors de la création.');
     }
@@ -44,7 +43,7 @@ export class UsersService {
     const [users, total] = await this.userRepository.findAndCount({
       skip: (page - 1) * limit,
       take: limit,
-    })
+    });
 
     const data: UserResponseDto[] = users.map((user) => ({
       id: user.id,
@@ -52,7 +51,7 @@ export class UsersService {
       email: user.email,
       role: user.role,
       active: user.active,
-    }))
+    }));
 
     return {
       data,
@@ -60,13 +59,13 @@ export class UsersService {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
-      }
-    }
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: number): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOneBy({id});
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
       throw new NotFoundException(`User with id ${id} is not found.`);
@@ -82,7 +81,7 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOneBy({id});
+    const user = await this.userRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException(`User id ${id} not found.`);
     }
@@ -105,7 +104,7 @@ export class UsersService {
   }
 
   async remove(id: number): Promise<void> {
-    const user = await this.userRepository.findOneBy({id});
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found.`);
@@ -119,12 +118,11 @@ export class UsersService {
   }
 
   async findByEmailAuth(email: string): Promise<UserAuthDto | null> {
-
-    const user =  await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({ email });
 
     if (!user) {
-      return null
-    };
+      return null;
+    }
 
     return {
       id: user.id,
@@ -133,6 +131,6 @@ export class UsersService {
       password: user.password,
       role: user.role,
       active: user.active,
-    }
+    };
   }
 }
