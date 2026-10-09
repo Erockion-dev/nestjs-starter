@@ -33,7 +33,7 @@ pnpm start:dev
 The API is available at:
 
 ```text
-http://localhost:3000
+http://localhost:3000/api
 ```
 
 ## Tests
@@ -85,7 +85,7 @@ The process stops if any command fails.
 
 ### Create the first administrator
 
-The `POST /admin/users` route is protected by the `ADMIN` role.
+The `POST /api/admin/users` route is protected by the `ADMIN` role.
 
 To create the first administrator:
 
@@ -95,7 +95,7 @@ To create the first administrator:
 @Roles(UserRole.ADMIN)
 ```
 
-2. Create the first user with `POST /admin/users`.
+2. Create the first user with `POST /api//admin/users`.
 
 3. Update the user's role directly in the database:
 ```sql
