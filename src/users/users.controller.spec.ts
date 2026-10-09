@@ -35,24 +35,17 @@ describe('UsersController', () => {
     expect(controller).toBeDefined();
   });
 
-
-  it('should call userService.findOne', () => {
-    controller.profile(1);
-    expect(findOneMock).toHaveBeenLastCalledWith(1);
-  })
-
   it('should return the result from userService.findOne', async () => {
-    const response: UserResponseDto = {
+    const profile: UserResponseDto = {
       id: 1,
       name: "user",
       email: "user@email.com",
       role: UserRole.USER,
       active: true,
     };
-    findOneMock.mockResolvedValue(response);
 
-    const result = await controller.profile(1);
+    const result = controller.profile(profile);
 
-    expect(result).toEqual(response);
+    expect(result).toEqual(profile);
   })
 });
